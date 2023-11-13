@@ -1,36 +1,42 @@
 package com.example.movieapp.data.repository
 
-import com.example.movieapp.data.mapper.toMovie
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.example.movieapp.core.domain.util.Constants.ITEMS_PER_PAGE
 import com.example.movieapp.data.mapper.toMovieDetails
 import com.example.movieapp.data.mapper.toMovieReview
 import com.example.movieapp.data.mapper.toSearch
+import com.example.movieapp.data.paging.PopularMovieSource
+import com.example.movieapp.data.paging.TrendingMovieSource
 import com.example.movieapp.data.remote.MovieApi
-import com.example.movieapp.domain.model.Movie
+import com.example.movieapp.domain.model.MovieResult
 import com.example.movieapp.domain.model.details.MovieDetails
 import com.example.movieapp.domain.model.review.MovieReview
 import com.example.movieapp.domain.model.search.Search
 import com.example.movieapp.domain.repository.RemoteDataSource
+import kotlinx.coroutines.flow.Flow
 
 class RemoteDataSourceImpl(
     private val movieApi: MovieApi
 ) : RemoteDataSource {
 
-    override suspend fun getTrendingMovies(): Result<Movie> {
-        return try {
-            val result = movieApi.getTrendingMovies().toMovie()
-            Result.success(result)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+    override suspend fun getTrendingMovies(): Flow<PagingData<MovieResult>> {
+        return Pager(
+            config = PagingConfig(pageSize = ITEMS_PER_PAGE),
+            pagingSourceFactory = {
+                TrendingMovieSource(movieApi)
+            }
+        ).flow
     }
 
-    override suspend fun getPopularMovies(): Result<Movie> {
-        return try {
-            val result = movieApi.getPopularMovies().toMovie()
-            Result.success(result)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+    override suspend fun getPopularMovies(): Flow<PagingData<MovieResult>> {
+        return Pager(
+            config = PagingConfig(pageSize = ITEMS_PER_PAGE),
+            pagingSourceFactory = {
+                PopularMovieSource(movieApi)
+            }
+        ).flow
     }
 
     override suspend fun getMovieById(movieId: Int): Result<MovieDetails> {
