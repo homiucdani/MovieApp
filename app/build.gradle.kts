@@ -113,4 +113,6 @@ dependencies {
     // Kotlin Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
+    // Detect Window Type
+    implementation("androidx.compose.material3:material3-window-size-class:1.1.2")
 }
