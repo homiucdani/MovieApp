@@ -5,6 +5,7 @@ import androidx.paging.PagingState
 import com.example.movieapp.data.mapper.toMovieResult
 import com.example.movieapp.data.remote.MovieApi
 import com.example.movieapp.domain.model.MovieResult
+import retrofit2.HttpException
 import java.io.IOException
 
 class PopularMovieSource(
@@ -14,6 +15,7 @@ class PopularMovieSource(
     override fun getRefreshKey(state: PagingState<Int, MovieResult>): Int? {
         return state.anchorPosition
     }
+
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MovieResult> {
         val page = params.key ?: 1
         return try {
@@ -24,6 +26,8 @@ class PopularMovieSource(
                 nextKey = if (response.results.isEmpty()) null else page + 1
             )
         } catch (e: IOException) {
+            LoadResult.Error(e)
+        } catch (e: HttpException) {
             LoadResult.Error(e)
         }
     }

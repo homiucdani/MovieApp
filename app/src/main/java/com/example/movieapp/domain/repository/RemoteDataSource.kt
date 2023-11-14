@@ -12,6 +12,8 @@ interface RemoteDataSource {
 
     suspend fun getPopularMovies(): Flow<PagingData<MovieResult>>
 
+    suspend fun getNowPlayingMovies(): Flow<PagingData<MovieResult>>
+
     suspend fun getMovieById(movieId: Int): Result<MovieDetails>
 
     suspend fun getMovieReviews(movieId: Int): Result<MovieReview>

@@ -2,36 +2,67 @@ package com.example.movieapp.presentation.home.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.paging.compose.LazyPagingItems
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.movieapp.R
 import com.example.movieapp.core.domain.util.Constants
+import com.example.movieapp.domain.model.MovieResult
 import com.example.movieapp.ui.theme.dimens
+
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun TrendingMovieCard(
+    pagerState: PagerState,
+    trendingMovies: LazyPagingItems<MovieResult>
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
+    ) {
+        Text(
+            modifier = Modifier.padding(horizontal = MaterialTheme.dimens.medium2),
+            text = stringResource(id = R.string.trending),
+            style = TextStyle(
+                fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                fontWeight = FontWeight.Bold
+            ),
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        AnimateTrendingMovieCard(
+            state = pagerState,
+            trendingMovies = trendingMovies
+        )
+    }
+}
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AnimateTrendingMovieCard(
     state: PagerState,
-    imagePath: String
+    trendingMovies: LazyPagingItems<MovieResult>
 ) {
-    val image = remember(imagePath) {
-        "${Constants.MOVIE_IMAGE_ORIGINAL_BASE_URL}$imagePath"
-    }
 
     HorizontalPager(
         state = state,
@@ -43,22 +74,22 @@ fun AnimateTrendingMovieCard(
             targetValue = if (pageOffset != 0.0f) 0.65f else 1f,
             label = ""
         )
-        TrendingMovieCard(
+        TrendingMovieItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(MaterialTheme.dimens.trendingMovieCardHeight)
                 .graphicsLayer {
                     scaleY = imageSize
                 },
-            image = image
+            image = "${Constants.MOVIE_IMAGE_ORIGINAL_BASE_URL}${trendingMovies[index]?.posterPath}"
         )
     }
 }
 
 @Composable
-fun TrendingMovieCard(
+fun TrendingMovieItem(
     modifier: Modifier = Modifier,
-    image: String
+    image: String?
 ) {
     val context = LocalContext.current
     Surface(
@@ -75,7 +106,7 @@ fun TrendingMovieCard(
                 .crossfade(true)
                 .build(),
             contentDescription = null,
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.FillBounds
         )
     }
 }

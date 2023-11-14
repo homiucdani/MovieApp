@@ -5,11 +5,11 @@ import androidx.paging.PagingState
 import com.example.movieapp.data.mapper.toMovieResult
 import com.example.movieapp.data.remote.MovieApi
 import com.example.movieapp.domain.model.MovieResult
+import okio.IOException
 import retrofit2.HttpException
-import java.io.IOException
 
-class TrendingMovieSource(
-    private val movieApi: MovieApi,
+class NowPlayingMovieSource(
+    private val movieApi: MovieApi
 ) : PagingSource<Int, MovieResult>() {
 
     override fun getRefreshKey(state: PagingState<Int, MovieResult>): Int? {
@@ -18,10 +18,11 @@ class TrendingMovieSource(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MovieResult> {
         val page = params.key ?: 1
+
         return try {
-            val response = movieApi.getTrendingMovies(page = page)
+            val response = movieApi.getNowPlayingMovies(page = page)
             LoadResult.Page(
-                data = response.results.map { it.toMovieResult() },
+                data = response.results.map { it.toMovieResult() }.reversed(),
                 prevKey = if (page == 1) null else page - 1,
                 nextKey = if (response.results.isEmpty()) null else page + 1
             )

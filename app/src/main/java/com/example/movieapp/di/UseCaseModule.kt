@@ -3,6 +3,7 @@ package com.example.movieapp.di
 import com.example.movieapp.domain.repository.RemoteDataSource
 import com.example.movieapp.domain.use_case.GetMovieById
 import com.example.movieapp.domain.use_case.GetMovieReviews
+import com.example.movieapp.domain.use_case.GetNowPlayingMovies
 import com.example.movieapp.domain.use_case.GetPopularMovies
 import com.example.movieapp.domain.use_case.GetTrendingMovies
 import com.example.movieapp.domain.use_case.MovieUseCases
@@ -24,7 +25,8 @@ object UseCaseModule {
             getPopularMovies = GetPopularMovies(remoteDataSource),
             getTrendingMovies = GetTrendingMovies(remoteDataSource),
             getMovieReviews = GetMovieReviews(remoteDataSource),
-            searchMovie = SearchMovie(remoteDataSource)
+            searchMovie = SearchMovie(remoteDataSource),
+            getNowPlayingMovies = GetNowPlayingMovies(remoteDataSource)
         )
     }
 }

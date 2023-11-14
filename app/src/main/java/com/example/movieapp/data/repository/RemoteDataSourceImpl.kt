@@ -7,6 +7,7 @@ import com.example.movieapp.core.domain.util.Constants.ITEMS_PER_PAGE
 import com.example.movieapp.data.mapper.toMovieDetails
 import com.example.movieapp.data.mapper.toMovieReview
 import com.example.movieapp.data.mapper.toSearch
+import com.example.movieapp.data.paging.NowPlayingMovieSource
 import com.example.movieapp.data.paging.PopularMovieSource
 import com.example.movieapp.data.paging.TrendingMovieSource
 import com.example.movieapp.data.remote.MovieApi
@@ -35,6 +36,15 @@ class RemoteDataSourceImpl(
             config = PagingConfig(pageSize = ITEMS_PER_PAGE),
             pagingSourceFactory = {
                 PopularMovieSource(movieApi)
+            }
+        ).flow
+    }
+
+    override suspend fun getNowPlayingMovies(): Flow<PagingData<MovieResult>> {
+        return Pager(
+            config = PagingConfig(pageSize = ITEMS_PER_PAGE),
+            pagingSourceFactory = {
+                NowPlayingMovieSource(movieApi)
             }
         ).flow
     }

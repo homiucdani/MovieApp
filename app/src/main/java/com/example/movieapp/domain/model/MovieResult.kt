@@ -2,7 +2,7 @@ package com.example.movieapp.domain.model
 
 data class MovieResult(
     val adult: Boolean,
-    val backdropPath: String,
+    val backdropPath: String?,
     val genreIds: List<Int>,
     val id: Int,
     val originalLanguage: String,

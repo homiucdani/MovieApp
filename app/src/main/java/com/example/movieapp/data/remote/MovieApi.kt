@@ -23,6 +23,12 @@ interface MovieApi {
         @Query("page") page: Int = 1
     ): MovieDto
 
+    @GET("movie/now_playing")
+    suspend fun getNowPlayingMovies(
+        @Query("api_key") api: String = Constants.API_KEY,
+        @Query("page") page: Int = 1
+    ): MovieDto
+
     @GET("movie/{movie_id}")
     suspend fun getMovieById(
         @Path("movie_id") movieId: Int,
