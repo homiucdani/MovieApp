@@ -25,7 +25,7 @@ fun RatingBar(
                 modifier = Modifier.size(MaterialTheme.dimens.small2),
                 imageVector = Icons.Default.Star,
                 contentDescription = null,
-                tint = if (index <= rating) color else unfilledColor
+                tint = if (index <= rating.div(2)) color else unfilledColor
             )
         }
     }

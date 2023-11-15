@@ -1,9 +1,13 @@
 package com.example.movieapp.navigation
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.unit.IntOffset
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -12,6 +16,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.example.movieapp.presentation.details.DetailsScreen
+import com.example.movieapp.presentation.details.DetailsViewModel
+import com.example.movieapp.presentation.home.HomeEvent
 import com.example.movieapp.presentation.home.HomeScreen
 import com.example.movieapp.presentation.home.HomeViewModel
 
@@ -23,13 +30,19 @@ fun SetupNavGraph(
         navController = navController,
         startDestination = Screen.Home.route
     ) {
-        home()
+        home(
+            navigateToDetails = { movieId ->
+                navController.navigate(Screen.Details.passMovieId(movieId))
+            }
+        )
         details()
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
-fun NavGraphBuilder.home() {
+fun NavGraphBuilder.home(
+    navigateToDetails: (Int) -> Unit
+) {
     composable(
         route = Screen.Home.route
     ) {
@@ -48,7 +61,14 @@ fun NavGraphBuilder.home() {
             pagerState = pagerState,
             trendingMovies = trendingMovies,
             popularMovies = popularMovies,
-            nowPlayingMovies = nowPlayingMovies
+            nowPlayingMovies = nowPlayingMovies,
+            onEvent = { event ->
+                when (event) {
+                    is HomeEvent.OnMovieClick -> {
+                        navigateToDetails(event.movieId)
+                    }
+                }
+            }
         )
     }
 }
@@ -62,8 +82,36 @@ fun NavGraphBuilder.details() {
             ) {
                 type = NavType.IntType
             }
-        )
+        ),
+        enterTransition = {
+            slideInHorizontally(
+                animationSpec = tween(
+                    durationMillis = 300
+                ),
+                initialOffsetX = { width ->
+                    -width
+                }
+            )
+        },
+        exitTransition = {
+            slideOut(
+                tween(
+                    durationMillis = 300
+                ),
+                targetOffset = { height ->
+                    IntOffset(0, height.height)
+                }
+            )
+        }
     ) {
+        val detailsViewModel: DetailsViewModel = hiltViewModel()
+        val state = detailsViewModel.state.collectAsState().value
 
+        DetailsScreen(
+            state = state,
+            onEvent = { event ->
+                detailsViewModel.onEvent(event)
+            }
+        )
     }
 }

@@ -16,22 +16,31 @@ fun HomeContent(
     trendingMovies: LazyPagingItems<MovieResult>,
     popularMovies: LazyPagingItems<MovieResult>,
     nowPlayingMovies: LazyPagingItems<MovieResult>,
+    onCardClick: (Int) -> Unit
 ) {
     LazyColumn(
         modifier = modifier
     ) {
         item {
-            TrendingMovieCard(pagerState = pagerState, trendingMovies = trendingMovies)
+            TrendingMovieCard(
+                pagerState = pagerState,
+                trendingMovies = trendingMovies,
+                onCardClick = onCardClick
+            )
         }
 
         item {
             PopularMovieCard(
                 popularMovies = popularMovies,
+                onCardClick = onCardClick
             )
         }
 
         item {
-            NowPlayingMovieCard(nowPlayingMovies = nowPlayingMovies)
+            NowPlayingMovieCard(
+                nowPlayingMovies = nowPlayingMovies,
+                onCardClick = onCardClick
+            )
         }
     }
 }

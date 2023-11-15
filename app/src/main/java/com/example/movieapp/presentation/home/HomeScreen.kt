@@ -20,6 +20,7 @@ fun HomeScreen(
     trendingMovies: LazyPagingItems<MovieResult>,
     popularMovies: LazyPagingItems<MovieResult>,
     nowPlayingMovies: LazyPagingItems<MovieResult>,
+    onEvent: (HomeEvent) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -37,7 +38,10 @@ fun HomeScreen(
             pagerState = pagerState,
             trendingMovies = trendingMovies,
             popularMovies = popularMovies,
-            nowPlayingMovies = nowPlayingMovies
+            nowPlayingMovies = nowPlayingMovies,
+            onCardClick = { movieId ->
+                onEvent(HomeEvent.OnMovieClick(movieId))
+            }
         )
     }
 }

@@ -8,10 +8,12 @@ import com.example.movieapp.domain.model.MovieResult
 
 @Composable
 fun NowPlayingMovieCard(
-    nowPlayingMovies: LazyPagingItems<MovieResult>
+    nowPlayingMovies: LazyPagingItems<MovieResult>,
+    onCardClick: (Int) -> Unit
 ) {
     MovieCard(
         movieCardTitle = stringResource(R.string.now_playing),
-        movies = nowPlayingMovies
+        movies = nowPlayingMovies,
+        onCardClick = onCardClick
     )
 }

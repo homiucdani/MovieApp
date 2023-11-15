@@ -9,10 +9,12 @@ import com.example.movieapp.domain.model.MovieResult
 
 @Composable
 fun PopularMovieCard(
-    popularMovies: LazyPagingItems<MovieResult>
+    popularMovies: LazyPagingItems<MovieResult>,
+    onCardClick: (Int) -> Unit
 ) {
     MovieCard(
         movieCardTitle = stringResource(R.string.popular),
-        movies = popularMovies
+        movies = popularMovies,
+        onCardClick = onCardClick
     )
 }

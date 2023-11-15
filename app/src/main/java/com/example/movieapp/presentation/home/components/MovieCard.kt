@@ -1,5 +1,7 @@
 package com.example.movieapp.presentation.home.components
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -27,7 +29,8 @@ import com.example.movieapp.ui.theme.dimens
 @Composable
 fun MovieCard(
     movieCardTitle: String,
-    movies: LazyPagingItems<MovieResult>
+    movies: LazyPagingItems<MovieResult>,
+    onCardClick: (Int) -> Unit
 ) {
     Column(
         modifier = Modifier.padding(top = MaterialTheme.dimens.medium2),
@@ -52,7 +55,10 @@ fun MovieCard(
             ) { index ->
                 val movie = movies[index]
                 movie?.let { movieResult ->
-                    VerticalMovieCard(movieResult = movieResult)
+                    VerticalMovieCard(
+                        movieResult = movieResult,
+                        onCardClick = onCardClick
+                    )
                 }
             }
         }
@@ -61,7 +67,8 @@ fun MovieCard(
 
 @Composable
 fun VerticalMovieCard(
-    movieResult: MovieResult
+    movieResult: MovieResult,
+    onCardClick: (Int) -> Unit
 ) {
 
     val context = LocalContext.current
@@ -69,6 +76,10 @@ fun VerticalMovieCard(
     val image = "${Constants.MOVIE_IMAGE_ORIGINAL_BASE_URL}${movieResult.posterPath}"
 
     Column(
+        modifier = Modifier.clickable(
+            interactionSource = MutableInteractionSource(),
+            indication = null
+        ) { onCardClick(movieResult.id) },
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.extraSmall)
     ) {
 

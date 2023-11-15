@@ -2,6 +2,8 @@ package com.example.movieapp.presentation.home.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -36,7 +38,8 @@ import com.example.movieapp.ui.theme.dimens
 @Composable
 fun TrendingMovieCard(
     pagerState: PagerState,
-    trendingMovies: LazyPagingItems<MovieResult>
+    trendingMovies: LazyPagingItems<MovieResult>,
+    onCardClick: (Int) -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
@@ -52,7 +55,8 @@ fun TrendingMovieCard(
         )
         AnimateTrendingMovieCard(
             state = pagerState,
-            trendingMovies = trendingMovies
+            trendingMovies = trendingMovies,
+            onCardClick = onCardClick
         )
     }
 }
@@ -61,7 +65,8 @@ fun TrendingMovieCard(
 @Composable
 fun AnimateTrendingMovieCard(
     state: PagerState,
-    trendingMovies: LazyPagingItems<MovieResult>
+    trendingMovies: LazyPagingItems<MovieResult>,
+    onCardClick: (Int) -> Unit
 ) {
 
     HorizontalPager(
@@ -80,6 +85,14 @@ fun AnimateTrendingMovieCard(
                 .height(MaterialTheme.dimens.trendingMovieCardHeight)
                 .graphicsLayer {
                     scaleY = imageSize
+                }
+                .clickable(
+                    interactionSource = MutableInteractionSource(),
+                    indication = null
+                ) {
+                    trendingMovies[index]?.let { movieResult ->
+                        onCardClick(movieResult.id)
+                    }
                 },
             image = "${Constants.MOVIE_IMAGE_ORIGINAL_BASE_URL}${trendingMovies[index]?.posterPath}"
         )

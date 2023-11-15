@@ -3,7 +3,7 @@ package com.example.movieapp.domain.model.details
 
 data class MovieDetails(
     val adult: Boolean,
-    val backdropPath: String,
+    val backdropPath: String?,
     val budget: Int,
     val genres: List<Genre>,
     val homepage: String,
@@ -13,7 +13,7 @@ data class MovieDetails(
     val originalTitle: String,
     val overview: String,
     val popularity: Double,
-    val posterPath: String,
+    val posterPath: String?,
     val releaseDate: String,
     val revenue: Int,
     val runtime: Int,
