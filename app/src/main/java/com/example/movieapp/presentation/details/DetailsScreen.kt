@@ -3,6 +3,7 @@ package com.example.movieapp.presentation.details
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,7 +11,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -47,18 +52,41 @@ fun DetailsScreen(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                Surface(
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight(0.5f),
-                    shape = RoundedCornerShape(MaterialTheme.dimens.medium3)
+                        .fillMaxHeight(0.5f)
                 ) {
-                    AsyncImage(
+
+                    Surface(
                         modifier = Modifier.fillMaxSize(),
-                        model = image,
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop
-                    )
+                        shape = RoundedCornerShape(MaterialTheme.dimens.medium3)
+                    ) {
+                        AsyncImage(
+                            modifier = Modifier.fillMaxSize(),
+                            model = image,
+                            contentDescription = null,
+                            contentScale = ContentScale.FillBounds
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(MaterialTheme.dimens.small2)
+                    ) {
+                        IconButton(
+                            onClick = {
+                                onEvent(DetailsEvent.OnBackClick)
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.ArrowBack,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.medium1))
@@ -82,8 +110,8 @@ fun DetailsScreen(
                         onEvent(DetailsEvent.OnTabSelected(index))
                     },
                     overview = movieDetails.overview,
-                    reviews = state.reviews,
-                    onToggleMovie = { movieReviewResult ->
+                    listOfMovieUiState = state.movieUiState,
+                    onToggleReview = { movieReviewResult ->
                         onEvent(DetailsEvent.OnToggleReview(movieReviewResult))
                     }
                 )

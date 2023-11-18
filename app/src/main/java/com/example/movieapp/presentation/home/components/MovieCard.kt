@@ -108,6 +108,6 @@ fun VerticalMovieCard(
             color = MaterialTheme.colorScheme.onSurface,
         )
 
-        RatingBar(rating = movieResult.voteAverage.div(2))
+        RatingBar(rating = movieResult.voteAverage)
     }
 }

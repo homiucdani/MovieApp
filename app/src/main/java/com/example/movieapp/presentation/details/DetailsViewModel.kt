@@ -36,6 +36,23 @@ class DetailsViewModel @Inject constructor(
                     )
                 }
             }
+
+            is DetailsEvent.OnToggleReview -> {
+                _state.update {
+                    it.copy(
+                        movieUiState = it.movieUiState.map { movieUiState ->
+                            if (movieUiState.reviews == event.movieReviewResult) {
+                                movieUiState.copy(
+                                    expanded = !movieUiState.expanded
+                                )
+                            } else {
+                                movieUiState
+                            }
+                        }
+                    )
+                }
+            }
+
             else -> Unit
         }
     }
@@ -44,13 +61,19 @@ class DetailsViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val reviews = async { useCases.getMovieReviews(movieId) }.await()
             withContext(Dispatchers.Main) {
+
                 val data =
                     reviews.getOrNull()?.results?.filter { it.authorDetails.avatarPath != null }
                         ?.take(5) ?: emptyList()
+
                 if (reviews.isSuccess) {
                     _state.update {
                         it.copy(
-                             reviews = data
+                            movieUiState = data.map {movieResult ->
+                                DetailsMovieUiState(
+                                    reviews = movieResult
+                                )
+                            }
                         )
                     }
                 } else {

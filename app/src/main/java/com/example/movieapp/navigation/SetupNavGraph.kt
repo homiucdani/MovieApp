@@ -16,6 +16,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.example.movieapp.presentation.details.DetailsEvent
 import com.example.movieapp.presentation.details.DetailsScreen
 import com.example.movieapp.presentation.details.DetailsViewModel
 import com.example.movieapp.presentation.home.HomeEvent
@@ -35,7 +36,11 @@ fun SetupNavGraph(
                 navController.navigate(Screen.Details.passMovieId(movieId))
             }
         )
-        details()
+        details(
+            onBackClick = {
+                navController.popBackStack()
+            }
+        )
     }
 }
 
@@ -73,7 +78,9 @@ fun NavGraphBuilder.home(
     }
 }
 
-fun NavGraphBuilder.details() {
+fun NavGraphBuilder.details(
+    onBackClick: () -> Unit
+) {
     composable(
         route = Screen.Details.route,
         arguments = listOf(
@@ -110,7 +117,13 @@ fun NavGraphBuilder.details() {
         DetailsScreen(
             state = state,
             onEvent = { event ->
-                detailsViewModel.onEvent(event)
+                when (event) {
+                    DetailsEvent.OnBackClick -> {
+                        onBackClick()
+                    }
+
+                    else -> detailsViewModel.onEvent(event)
+                }
             }
         )
     }
