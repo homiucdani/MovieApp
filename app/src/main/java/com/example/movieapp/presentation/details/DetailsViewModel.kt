@@ -41,7 +41,7 @@ class DetailsViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         movieUiState = it.movieUiState.map { movieUiState ->
-                            if (movieUiState.reviews == event.movieReviewResult) {
+                            if (movieUiState.movieReview == event.movieReviewResult) {
                                 movieUiState.copy(
                                     expanded = !movieUiState.expanded
                                 )
@@ -71,7 +71,7 @@ class DetailsViewModel @Inject constructor(
                         it.copy(
                             movieUiState = data.map {movieResult ->
                                 DetailsMovieUiState(
-                                    reviews = movieResult
+                                    movieReview = movieResult
                                 )
                             }
                         )

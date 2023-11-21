@@ -53,6 +53,7 @@ fun NavGraphBuilder.home(
     ) {
         val homeViewModel: HomeViewModel = hiltViewModel()
         val state = homeViewModel.state.collectAsState().value
+
         val trendingMovies = state.trendingMovies.collectAsLazyPagingItems()
         val popularMovies = state.trendingMovies.collectAsLazyPagingItems()
         val nowPlayingMovies = state.trendingMovies.collectAsLazyPagingItems()

@@ -69,7 +69,7 @@ fun TabDetails(
             1 -> {
                 items(listOfMovieUiState) { movieUiState ->
                     ReviewItem(
-                        movieReviewResult = movieUiState.reviews,
+                        movieReviewResult = movieUiState.movieReview,
                         onToggleReview = { movieReviewResult ->
                             onToggleReview(movieReviewResult)
                         },

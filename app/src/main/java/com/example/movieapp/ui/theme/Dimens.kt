@@ -13,7 +13,8 @@ data class Dimens(
     val medium3: Dp = 0.dp,
     val large: Dp = 0.dp,
     val trendingMovieCardHeight: Dp = 200.dp,
-    val popularMovieCardHeight: Dp = 200.dp
+    val popularMovieCardHeight: Dp = 200.dp,
+    val searchCardHeight: Dp = 120.dp
 )
 
 val CompactSmallDimens = Dimens(
@@ -26,7 +27,8 @@ val CompactSmallDimens = Dimens(
     medium3 = 30.dp,
     large = 45.dp,
     trendingMovieCardHeight = 100.dp,
-    popularMovieCardHeight = 100.dp
+    popularMovieCardHeight = 100.dp,
+    searchCardHeight = 70.dp
 )
 
 val CompactMediumDimens = Dimens(
@@ -39,7 +41,8 @@ val CompactMediumDimens = Dimens(
     medium3 = 35.dp,
     large = 65.dp,
     trendingMovieCardHeight = 200.dp,
-    popularMovieCardHeight = 220.dp
+    popularMovieCardHeight = 220.dp,
+    searchCardHeight = 120.dp
 )
 
 val CompactStandardDimens = Dimens(
@@ -52,7 +55,8 @@ val CompactStandardDimens = Dimens(
     medium3 = 40.dp,
     large = 80.dp,
     trendingMovieCardHeight = 220.dp,
-    popularMovieCardHeight = 220.dp
+    popularMovieCardHeight = 220.dp,
+    searchCardHeight = 140.dp
 )
 
 // tablets
@@ -66,7 +70,8 @@ val MediumDimens = Dimens(
     medium3 = 40.dp,
     large = 110.dp,
     trendingMovieCardHeight = 260.dp,
-    popularMovieCardHeight = 260.dp
+    popularMovieCardHeight = 260.dp,
+    searchCardHeight = 170.dp
 )
 
 val ExpandedDimens = Dimens(
@@ -79,5 +84,6 @@ val ExpandedDimens = Dimens(
     medium3 = 45.dp,
     large = 130.dp,
     trendingMovieCardHeight = 300.dp,
-    popularMovieCardHeight = 300.dp
+    popularMovieCardHeight = 300.dp,
+    searchCardHeight = 200.dp
 )
