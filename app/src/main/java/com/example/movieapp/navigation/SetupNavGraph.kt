@@ -22,6 +22,8 @@ import com.example.movieapp.presentation.details.DetailsViewModel
 import com.example.movieapp.presentation.home.HomeEvent
 import com.example.movieapp.presentation.home.HomeScreen
 import com.example.movieapp.presentation.home.HomeViewModel
+import com.example.movieapp.presentation.search.SearchScreen
+import com.example.movieapp.presentation.search.SearchViewModel
 
 @Composable
 fun SetupNavGraph(
@@ -34,6 +36,9 @@ fun SetupNavGraph(
         home(
             navigateToDetails = { movieId ->
                 navController.navigate(Screen.Details.passMovieId(movieId))
+            },
+            navigateToSearch = {
+                navController.navigate(Screen.Search.route)
             }
         )
         details(
@@ -41,12 +46,15 @@ fun SetupNavGraph(
                 navController.popBackStack()
             }
         )
+
+        search()
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 fun NavGraphBuilder.home(
-    navigateToDetails: (Int) -> Unit
+    navigateToDetails: (Int) -> Unit,
+    navigateToSearch: () -> Unit
 ) {
     composable(
         route = Screen.Home.route
@@ -72,6 +80,10 @@ fun NavGraphBuilder.home(
                 when (event) {
                     is HomeEvent.OnMovieClick -> {
                         navigateToDetails(event.movieId)
+                    }
+
+                    HomeEvent.NavigateToSearch -> {
+                        navigateToSearch()
                     }
                 }
             }
@@ -125,6 +137,22 @@ fun NavGraphBuilder.details(
 
                     else -> detailsViewModel.onEvent(event)
                 }
+            }
+        )
+    }
+}
+
+fun NavGraphBuilder.search() {
+    composable(
+        route = Screen.Search.route
+    ) {
+        val searchViewModel: SearchViewModel = hiltViewModel()
+        val state = searchViewModel.state.collectAsState().value
+
+        SearchScreen(
+            state = state,
+            onEvent = { event ->
+                searchViewModel.onEvent(event)
             }
         )
     }

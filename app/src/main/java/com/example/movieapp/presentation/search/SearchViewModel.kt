@@ -24,8 +24,18 @@ class SearchViewModel @Inject constructor(
     fun onEvent(event: SearchEvent) {
         when (event) {
             is SearchEvent.OnSearchClick -> {
-                execSearch(event.query)
+                execSearch(state.value.query)
             }
+
+            is SearchEvent.OnSearchChange -> {
+                _state.update {
+                    it.copy(
+                        query = event.search
+                    )
+                }
+            }
+
+            else -> Unit
         }
     }
 
@@ -42,7 +52,7 @@ class SearchViewModel @Inject constructor(
                 }
             }.onFailure { error ->
                 withContext(Dispatchers.Main) {
-                    when(error) {
+                    when (error) {
                         is ConnectException -> {
                             _state.update {
                                 it.copy(

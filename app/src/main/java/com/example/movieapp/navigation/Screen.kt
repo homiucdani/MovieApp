@@ -6,4 +6,5 @@ sealed class Screen(val route: String) {
     object Details : Screen(route = "details_screen/{movie_id}") {
         fun passMovieId(movieId: Int) = "details_screen/$movieId"
     }
+    object Search : Screen(route = "search_screen")
 }
