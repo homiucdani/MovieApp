@@ -2,12 +2,14 @@ package com.example.movieapp.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.movieapp.connectivity.ConnectivityObserver
 import com.example.movieapp.domain.use_case.MovieUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -15,7 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val useCases: MovieUseCases
+    private val useCases: MovieUseCases,
+    private val connectivityObserver: ConnectivityObserver
 ) : ViewModel() {
 
 
@@ -23,7 +26,7 @@ class HomeViewModel @Inject constructor(
     val state: StateFlow<HomeState> = _state
 
     init {
-        loadDataAsync()
+        observeNetwork()
     }
 
     private fun loadDataAsync() {
@@ -38,6 +41,21 @@ class HomeViewModel @Inject constructor(
                         trendingMovies = trendingMovies,
                         popularMovies = popularMovies,
                         nowPlayingMovies = nowPlayingMovies
+                    )
+                }
+            }
+        }
+    }
+
+    private fun observeNetwork() {
+        viewModelScope.launch {
+            connectivityObserver.observeNetwork().collectLatest { status ->
+                if (status == ConnectivityObserver.Status.Available) {
+                    loadDataAsync()
+                }
+                _state.update {
+                    it.copy(
+                        status = status
                     )
                 }
             }

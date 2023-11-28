@@ -17,10 +17,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import coil.compose.AsyncImage
 import com.example.movieapp.core.domain.util.Constants
 import com.example.movieapp.presentation.details.components.DetailsAboutMovie
@@ -35,15 +39,13 @@ fun DetailsScreen(
 
     val image = "${Constants.MOVIE_IMAGE_ORIGINAL_BASE_URL}${state.movieDetails?.posterPath}"
 
-    if (state.isLoading && state.movieDetails != null) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            CircularProgressIndicator(
-                color = MaterialTheme.colorScheme.primary
-            )
-        }
+    if (state.isLoading || state.error != null) {
+        LoadOrErrorContent(
+            state,
+            onBackPressed = {
+                onEvent(DetailsEvent.OnBackClick)
+            }
+        )
     } else {
         state.movieDetails?.let { movieDetails ->
             Column(
@@ -117,6 +119,40 @@ fun DetailsScreen(
                     }
                 )
             }
+        }
+    }
+}
+
+@Composable
+private fun LoadOrErrorContent(
+    state: DetailsState,
+    onBackPressed: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        if (state.error != null) {
+            IconButton(
+                modifier = Modifier.align(Alignment.TopStart),
+                onClick = onBackPressed
+            ) {
+                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
+            }
+            Text(
+                modifier = Modifier.align(Alignment.Center),
+                text = state.error,
+                style = TextStyle(
+                    fontSize = MaterialTheme.typography.headlineLarge.fontSize,
+                    fontWeight = FontWeight.SemiBold
+                ),
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        } else {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center),
+                color = MaterialTheme.colorScheme.primary
+            )
         }
     }
 }

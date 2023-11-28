@@ -1,14 +1,17 @@
 package com.example.movieapp.presentation.details
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.movieapp.connectivity.ConnectivityObserver
 import com.example.movieapp.domain.use_case.MovieUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -17,14 +20,15 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailsViewModel @Inject constructor(
     private val useCases: MovieUseCases,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
+    private val connectivityObserver: ConnectivityObserver
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(DetailsState())
     val state: StateFlow<DetailsState> = _state
 
     init {
-        getMovieById()
+        observeNetwork()
     }
 
     fun onEvent(event: DetailsEvent) {
@@ -76,12 +80,6 @@ class DetailsViewModel @Inject constructor(
                             }
                         )
                     }
-                } else {
-                    _state.update {
-                        it.copy(
-                            error = reviews.exceptionOrNull()?.localizedMessage
-                        )
-                    }
                 }
             }
         }
@@ -116,6 +114,22 @@ class DetailsViewModel @Inject constructor(
             }
             // async
             getReviews(movieId)
+        }
+    }
+
+    private fun observeNetwork() {
+        viewModelScope.launch {
+            connectivityObserver.observeNetwork().collectLatest { status ->
+                if (status == ConnectivityObserver.Status.Available) {
+                    getMovieById()
+                }
+                _state.update {
+                    it.copy(
+                        error = if (status == ConnectivityObserver.Status.Lost) "No internet connection" else null
+                    )
+                }
+                Log.d("TEST", "observeNetwork: $status")
+            }
         }
     }
 }

@@ -1,5 +1,8 @@
 package com.example.movieapp.di
 
+import android.content.Context
+import com.example.movieapp.connectivity.ConnectivityObserver
+import com.example.movieapp.connectivity.ConnectivityObserverImpl
 import com.example.movieapp.data.remote.MovieApi
 import com.example.movieapp.core.domain.util.Constants
 import com.example.movieapp.data.repository.RemoteDataSourceImpl
@@ -7,6 +10,7 @@ import com.example.movieapp.domain.repository.RemoteDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -51,5 +55,11 @@ object NetworkModule {
     @Singleton
     fun providesRemoteDataSource(movieApi: MovieApi): RemoteDataSource {
         return RemoteDataSourceImpl(movieApi)
+    }
+
+    @Provides
+    @Singleton
+    fun providesConnectivityObserver(@ApplicationContext context: Context): ConnectivityObserver {
+        return ConnectivityObserverImpl(context)
     }
 }
