@@ -13,3 +13,5 @@
 .externalNativeBuild
 .cxx
 local.properties
+/.idea/deploymentTargetDropDown.xml
+/app/src/main/java/com/example/movieapp/core/domain/util/Constants.kt
