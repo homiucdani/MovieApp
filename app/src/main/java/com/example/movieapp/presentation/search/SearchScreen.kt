@@ -49,8 +49,33 @@ fun SearchScreen(
             onSearchClick = {
                 onEvent(SearchEvent.OnSearchClick)
             },
+            error = state.error,
             onCloseClick = {
-
+                onEvent(SearchEvent.OnCloseClick)
+            },
+            suggestionResults = state.suggestionResults,
+            onSuggestionFocusChange = { focusState ->
+                onEvent(SearchEvent.OnSuggestionFocusChange(focusState))
+            },
+            onSearchFocusChange = {
+                onEvent(SearchEvent.OnSearchFocusChange(it))
+            },
+            showSearch = state.showSearch,
+            showSuggestion = state.showSuggestion,
+            onSuggestionClearFocus = {
+                onEvent(SearchEvent.OnSuggestionFocusClear)
+            },
+            onDeleteAllSuggestions = {
+                onEvent(SearchEvent.OnDeleteAllSuggestions)
+            },
+            onDeleteSuggestionById = { suggestionId ->
+                onEvent(SearchEvent.OnDeleteSuggestionById(suggestionId))
+            },
+            onSearchedMovieClick = { movieId ->
+                onEvent(SearchEvent.NavigateToMovieDetails(movieId))
+            },
+            onSuggestionClick = {suggestion ->
+                onEvent(SearchEvent.OnSuggestionClick(suggestion))
             }
         )
     }

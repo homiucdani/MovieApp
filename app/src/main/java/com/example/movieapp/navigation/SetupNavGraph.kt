@@ -6,6 +6,7 @@ import androidx.compose.animation.slideOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.unit.IntOffset
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -16,14 +17,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.example.movieapp.core.presentation.util.UiEvent
 import com.example.movieapp.presentation.details.DetailsEvent
 import com.example.movieapp.presentation.details.DetailsScreen
 import com.example.movieapp.presentation.details.DetailsViewModel
 import com.example.movieapp.presentation.home.HomeEvent
 import com.example.movieapp.presentation.home.HomeScreen
 import com.example.movieapp.presentation.home.HomeViewModel
+import com.example.movieapp.presentation.search.SearchEvent
 import com.example.movieapp.presentation.search.SearchScreen
 import com.example.movieapp.presentation.search.SearchViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun SetupNavGraph(
@@ -47,7 +51,14 @@ fun SetupNavGraph(
             }
         )
 
-        search()
+        search(
+            navigateBack = {
+                navController.popBackStack()
+            },
+            navigateToMovieDetails = { movieId ->
+                navController.navigate(Screen.Details.passMovieId(movieId))
+            }
+        )
     }
 }
 
@@ -142,17 +153,36 @@ fun NavGraphBuilder.details(
     }
 }
 
-fun NavGraphBuilder.search() {
+fun NavGraphBuilder.search(
+    navigateBack: () -> Unit,
+    navigateToMovieDetails: (Int) -> Unit
+) {
     composable(
         route = Screen.Search.route
     ) {
         val searchViewModel: SearchViewModel = hiltViewModel()
         val state = searchViewModel.state.collectAsState().value
 
+        LaunchedEffect(key1 = true) {
+            searchViewModel.uiEvent.collectLatest { event ->
+                when (event) {
+                    UiEvent.NavigateBack -> {
+                        navigateBack()
+                    }
+                }
+            }
+        }
+
         SearchScreen(
             state = state,
             onEvent = { event ->
-                searchViewModel.onEvent(event)
+                when (event) {
+                    is SearchEvent.NavigateToMovieDetails -> {
+                        navigateToMovieDetails(event.movieId)
+                    }
+
+                    else -> searchViewModel.onEvent(event)
+                }
             }
         )
     }

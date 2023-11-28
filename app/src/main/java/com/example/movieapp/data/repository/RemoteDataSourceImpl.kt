@@ -1,5 +1,6 @@
 package com.example.movieapp.data.repository
 
+import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -70,6 +71,7 @@ class RemoteDataSourceImpl(
     override suspend fun searchMovie(query: String): Result<Search> {
         return try {
             val result = movieApi.searchMovie(query).toSearch()
+            Log.d("TEST", "searchMovie: $result")
             Result.success(result)
         } catch (e: Exception) {
             Result.failure(e)

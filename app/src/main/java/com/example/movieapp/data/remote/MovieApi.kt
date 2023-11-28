@@ -1,7 +1,7 @@
 package com.example.movieapp.data.remote
 
-import com.example.movieapp.data.remote.dto.MovieDto
 import com.example.movieapp.core.domain.util.Constants
+import com.example.movieapp.data.remote.dto.MovieDto
 import com.example.movieapp.data.remote.dto.details.MovieDetailsDto
 import com.example.movieapp.data.remote.dto.review.MovieReviewDto
 import com.example.movieapp.data.remote.dto.search.SearchDto

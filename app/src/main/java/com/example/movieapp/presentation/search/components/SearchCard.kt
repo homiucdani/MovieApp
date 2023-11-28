@@ -9,7 +9,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -33,12 +32,11 @@ fun SearchCard(
     val image = "${Constants.MOVIE_IMAGE_W500_BASE_URL}${searchResult.posterPath}"
 
     Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.Top
+        modifier = modifier
     ) {
         Surface(
             modifier = Modifier
-                .weight(0.2f)
+                .weight(0.3f)
                 .height(MaterialTheme.dimens.searchCardHeight),
             shape = RoundedCornerShape(MaterialTheme.dimens.small2)
         ) {
@@ -56,14 +54,14 @@ fun SearchCard(
 
         Column(
             modifier = Modifier
-                .weight(0.8f)
+                .weight(0.7f)
                 .padding(
                     horizontal = MaterialTheme.dimens.small1,
                     vertical = MaterialTheme.dimens.extraSmall
                 )
         ) {
             Text(
-                text = "This is a title",
+                text = searchResult.title,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = TextStyle(
@@ -74,8 +72,8 @@ fun SearchCard(
             )
 
             Text(
-                text = "This is a simple description about the movie",
-                maxLines = 4,
+                text = searchResult.overview,
+                maxLines = 6,
                 overflow = TextOverflow.Ellipsis,
                 style = TextStyle(
                     fontSize = MaterialTheme.typography.labelLarge.fontSize

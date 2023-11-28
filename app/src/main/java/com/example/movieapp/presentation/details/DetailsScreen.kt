@@ -1,6 +1,5 @@
 package com.example.movieapp.presentation.details
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,9 +17,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import coil.compose.AsyncImage
 import com.example.movieapp.core.domain.util.Constants
@@ -28,7 +27,6 @@ import com.example.movieapp.presentation.details.components.DetailsAboutMovie
 import com.example.movieapp.presentation.details.components.TabDetails
 import com.example.movieapp.ui.theme.dimens
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun DetailsScreen(
     state: DetailsState,
@@ -60,7 +58,10 @@ fun DetailsScreen(
 
                     Surface(
                         modifier = Modifier.fillMaxSize(),
-                        shape = RoundedCornerShape(MaterialTheme.dimens.medium3)
+                        shape = RoundedCornerShape(
+                            bottomEnd = MaterialTheme.dimens.medium3,
+                            bottomStart = MaterialTheme.dimens.medium3
+                        )
                     ) {
                         AsyncImage(
                             modifier = Modifier.fillMaxSize(),
@@ -83,7 +84,7 @@ fun DetailsScreen(
                             Icon(
                                 imageVector = Icons.Default.ArrowBack,
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onSurface
+                                tint = Color.White
                             )
                         }
                     }
@@ -116,6 +117,6 @@ fun DetailsScreen(
                     }
                 )
             }
-        } ?: Box(modifier = Modifier.fillMaxSize()) { Text(text = "Something went wrong.") }
+        }
     }
 }

@@ -32,7 +32,6 @@ class HomeViewModel @Inject constructor(
             val popularMovies = async { useCases.getPopularMovies() }.await()
             val nowPlayingMovies = async { useCases.getNowPlayingMovies() }.await()
 
-
             withContext(Dispatchers.Main) {
                 _state.update {
                     it.copy(
