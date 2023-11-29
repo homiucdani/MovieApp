@@ -23,9 +23,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.example.movieapp.R
 import com.example.movieapp.core.domain.util.Constants
 import com.example.movieapp.presentation.details.components.DetailsAboutMovie
 import com.example.movieapp.presentation.details.components.TabDetails
@@ -38,6 +41,7 @@ fun DetailsScreen(
 ) {
 
     val image = "${Constants.MOVIE_IMAGE_ORIGINAL_BASE_URL}${state.movieDetails?.posterPath}"
+    val context = LocalContext.current
 
     if (state.isLoading || state.error != null) {
         LoadOrErrorContent(
@@ -67,7 +71,12 @@ fun DetailsScreen(
                     ) {
                         AsyncImage(
                             modifier = Modifier.fillMaxSize(),
-                            model = image,
+                            model = ImageRequest.Builder(context)
+                                .error(R.drawable.placeholder)
+                                .placeholder(R.drawable.placeholder)
+                                .crossfade(true)
+                                .data(image)
+                                .build(),
                             contentDescription = null,
                             contentScale = ContentScale.FillBounds
                         )
@@ -119,7 +128,37 @@ fun DetailsScreen(
                     }
                 )
             }
+        } ?: EmptyMovieContent(
+            error = "Something went wrong",
+            onBackPressed = {
+                onEvent(DetailsEvent.OnBackClick)
+            }
+        )
+    }
+}
+
+@Composable
+fun EmptyMovieContent(error: String, onBackPressed: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        IconButton(
+            modifier = Modifier.align(Alignment.TopStart),
+            onClick = onBackPressed
+        ) {
+            Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
         }
+        Text(
+            modifier = Modifier.align(Alignment.Center),
+            text = error,
+            style = TextStyle(
+                fontSize = MaterialTheme.typography.headlineLarge.fontSize,
+                fontWeight = FontWeight.SemiBold
+            ),
+            color = MaterialTheme.colorScheme.onSurface
+        )
     }
 }
 

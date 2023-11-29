@@ -53,6 +53,10 @@ class HomeViewModel @Inject constructor(
                 if (status == ConnectivityObserver.Status.Available) {
                     loadDataAsync()
                 }
+
+                if (status == ConnectivityObserver.Status.Lost) {
+                    _state.value = HomeState()
+                }
                 _state.update {
                     it.copy(
                         status = status

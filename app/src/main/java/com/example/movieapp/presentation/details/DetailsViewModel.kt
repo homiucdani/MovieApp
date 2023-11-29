@@ -1,6 +1,5 @@
 package com.example.movieapp.presentation.details
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -73,7 +72,7 @@ class DetailsViewModel @Inject constructor(
                 if (reviews.isSuccess) {
                     _state.update {
                         it.copy(
-                            movieUiState = data.map {movieResult ->
+                            movieUiState = data.map { movieResult ->
                                 DetailsMovieUiState(
                                     movieReview = movieResult
                                 )
@@ -96,17 +95,10 @@ class DetailsViewModel @Inject constructor(
             }
             viewModelScope.launch(Dispatchers.IO) {
                 val result = useCases.getMovieById(movieId)
-                if (result.isSuccess) {
+                result.onSuccess { movieDetails ->
                     _state.update {
                         it.copy(
-                            movieDetails = result.getOrNull(),
-                            isLoading = false
-                        )
-                    }
-                } else {
-                    _state.update {
-                        it.copy(
-                            error = result.exceptionOrNull()?.localizedMessage,
+                            movieDetails = movieDetails,
                             isLoading = false
                         )
                     }
@@ -123,12 +115,27 @@ class DetailsViewModel @Inject constructor(
                 if (status == ConnectivityObserver.Status.Available) {
                     getMovieById()
                 }
-                _state.update {
-                    it.copy(
-                        error = if (status == ConnectivityObserver.Status.Lost) "No internet connection" else null
-                    )
-                }
-                Log.d("TEST", "observeNetwork: $status")
+                checkAndUpdateNetworkStatus(status)
+            }
+        }
+    }
+
+    private fun checkAndUpdateNetworkStatus(status: ConnectivityObserver.Status) {
+        if (
+            status == ConnectivityObserver.Status.Lost ||
+            status == ConnectivityObserver.Status.Unavailable ||
+            status == ConnectivityObserver.Status.Losing
+        ) {
+            _state.update {
+                it.copy(
+                    error = "No internet connection"
+                )
+            }
+        } else {
+            _state.update {
+                it.copy(
+                    error = null
+                )
             }
         }
     }
