@@ -88,9 +88,14 @@ fun SearchContent(
             trailingIcon = {
                 IconButton(
                     onClick = {
-                        if (canClick) {
-                            canClick = false
-                            onCloseClick()
+                        if (canClick){
+                            if (search.isNotBlank()){
+                                canClick = true
+                                onCloseClick()
+                            } else {
+                                canClick = false
+                                onCloseClick()
+                            }
                         }
                     }
                 ) {
