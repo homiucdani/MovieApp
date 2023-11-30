@@ -6,6 +6,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.paging.compose.LazyPagingItems
 import com.example.movieapp.domain.model.MovieResult
@@ -22,6 +26,10 @@ fun HomeScreen(
     nowPlayingMovies: LazyPagingItems<MovieResult>,
     onEvent: (HomeEvent) -> Unit
 ) {
+    var isButtonEnabled by remember {
+        mutableStateOf(true)
+    }
+
     Scaffold(
         topBar = {
             HomeTopAppBar(
@@ -39,6 +47,10 @@ fun HomeScreen(
             trendingMovies = trendingMovies,
             popularMovies = popularMovies,
             nowPlayingMovies = nowPlayingMovies,
+            onButtonEnabled = isButtonEnabled,
+            onChangeButtonEnable = { unableButton ->
+                isButtonEnabled = unableButton
+            },
             onCardClick = { movieId ->
                 onEvent(HomeEvent.OnMovieClick(movieId))
             }

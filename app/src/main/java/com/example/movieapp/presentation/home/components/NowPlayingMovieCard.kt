@@ -9,11 +9,15 @@ import com.example.movieapp.domain.model.MovieResult
 @Composable
 fun NowPlayingMovieCard(
     nowPlayingMovies: LazyPagingItems<MovieResult>,
+    onButtonEnabled: Boolean,
+    onChangeButtonEnable: (Boolean) -> Unit,
     onCardClick: (Int) -> Unit
 ) {
     MovieCard(
         movieCardTitle = stringResource(R.string.now_playing),
         movies = nowPlayingMovies,
-        onCardClick = onCardClick
+        onCardClick = onCardClick,
+        onButtonEnabled = onButtonEnabled,
+        onChangeButtonEnable = onChangeButtonEnable
     )
 }

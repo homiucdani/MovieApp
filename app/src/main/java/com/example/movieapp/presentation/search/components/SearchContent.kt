@@ -25,6 +25,10 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
@@ -50,8 +54,14 @@ fun SearchContent(
     onDeleteAllSuggestions: () -> Unit,
     onDeleteSuggestionById: (Int) -> Unit,
     onSearchedMovieClick: (Int) -> Unit,
-    onSuggestionClick: (String) -> Unit
+    onSuggestionClick: (String) -> Unit,
+    onButtonEnabled: Boolean,
+    onChangeButtonEnable: (Boolean) -> Unit,
 ) {
+
+    var canClick by remember {
+        mutableStateOf(true)
+    }
 
     Column(
         modifier = modifier
@@ -77,7 +87,12 @@ fun SearchContent(
             },
             trailingIcon = {
                 IconButton(
-                    onClick = onCloseClick
+                    onClick = {
+                        if (canClick) {
+                            canClick = false
+                            onCloseClick()
+                        }
+                    }
                 ) {
                     Icon(imageVector = Icons.Filled.Clear, contentDescription = null)
                 }
@@ -132,8 +147,10 @@ fun SearchContent(
                             SearchCard(
                                 modifier = Modifier.clickable(
                                     indication = null,
-                                    interactionSource = MutableInteractionSource()
+                                    interactionSource = MutableInteractionSource(),
+                                    enabled = onButtonEnabled
                                 ) {
+                                    onChangeButtonEnable(false)
                                     onSearchedMovieClick(searchResult.id)
                                 },
                                 searchResult = searchResult

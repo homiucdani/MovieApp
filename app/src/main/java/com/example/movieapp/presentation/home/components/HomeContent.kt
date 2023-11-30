@@ -17,6 +17,8 @@ fun HomeContent(
     trendingMovies: LazyPagingItems<MovieResult>,
     popularMovies: LazyPagingItems<MovieResult>,
     nowPlayingMovies: LazyPagingItems<MovieResult>,
+    onButtonEnabled: Boolean,
+    onChangeButtonEnable: (Boolean) -> Unit,
     onCardClick: (Int) -> Unit
 ) {
     val handleLoadAndError = handleErrorContent(
@@ -34,21 +36,27 @@ fun HomeContent(
                 TrendingMovieCard(
                     pagerState = pagerState,
                     trendingMovies = trendingMovies,
-                    onCardClick = onCardClick
+                    onCardClick = onCardClick,
+                    onButtonEnabled = onButtonEnabled,
+                    onChangeButtonEnable = onChangeButtonEnable
                 )
             }
 
             item {
                 PopularMovieCard(
                     popularMovies = popularMovies,
-                    onCardClick = onCardClick
+                    onCardClick = onCardClick,
+                    onChangeButtonEnable = onChangeButtonEnable,
+                    onButtonEnabled = onButtonEnabled
                 )
             }
 
             item {
                 NowPlayingMovieCard(
                     nowPlayingMovies = nowPlayingMovies,
-                    onCardClick = onCardClick
+                    onCardClick = onCardClick,
+                    onButtonEnabled = onButtonEnabled,
+                    onChangeButtonEnable = onChangeButtonEnable
                 )
             }
         }

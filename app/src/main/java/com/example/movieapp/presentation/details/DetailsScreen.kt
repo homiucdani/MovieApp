@@ -19,6 +19,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,13 +46,18 @@ fun DetailsScreen(
 
     val image = "${Constants.MOVIE_IMAGE_ORIGINAL_BASE_URL}${state.movieDetails?.posterPath}"
     val context = LocalContext.current
+    var canClick by remember {
+        mutableStateOf(true)
+    }
 
     if (state.isLoading || state.error != null) {
         LoadOrErrorContent(
             state,
             onBackPressed = {
+                canClick = false
                 onEvent(DetailsEvent.OnBackClick)
-            }
+            },
+            canClick = canClick
         )
     } else {
         state.movieDetails?.let { movieDetails ->
@@ -89,7 +98,10 @@ fun DetailsScreen(
                     ) {
                         IconButton(
                             onClick = {
-                                onEvent(DetailsEvent.OnBackClick)
+                                if (canClick) {
+                                    canClick = false
+                                    onEvent(DetailsEvent.OnBackClick)
+                                }
                             }
                         ) {
                             Icon(
@@ -165,6 +177,7 @@ fun EmptyMovieContent(error: String, onBackPressed: () -> Unit) {
 @Composable
 private fun LoadOrErrorContent(
     state: DetailsState,
+    canClick: Boolean,
     onBackPressed: () -> Unit
 ) {
     Box(
@@ -174,7 +187,11 @@ private fun LoadOrErrorContent(
         if (state.error != null) {
             IconButton(
                 modifier = Modifier.align(Alignment.TopStart),
-                onClick = onBackPressed
+                onClick = {
+                    if (canClick) {
+                        onBackPressed()
+                    }
+                }
             ) {
                 Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
             }

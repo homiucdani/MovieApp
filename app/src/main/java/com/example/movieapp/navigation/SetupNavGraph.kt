@@ -77,7 +77,7 @@ fun NavGraphBuilder.home(
         val popularMovies = state.trendingMovies.collectAsLazyPagingItems()
         val nowPlayingMovies = state.trendingMovies.collectAsLazyPagingItems()
 
-        val pagerState = rememberPagerState() {
+        val pagerState = rememberPagerState {
             trendingMovies.itemCount
         }
 

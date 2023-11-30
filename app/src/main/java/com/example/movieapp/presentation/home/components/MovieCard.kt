@@ -30,6 +30,8 @@ import com.example.movieapp.ui.theme.dimens
 fun MovieCard(
     movieCardTitle: String,
     movies: LazyPagingItems<MovieResult>,
+    onButtonEnabled: Boolean,
+    onChangeButtonEnable: (Boolean) -> Unit,
     onCardClick: (Int) -> Unit
 ) {
     Column(
@@ -57,7 +59,9 @@ fun MovieCard(
                 movie?.let { movieResult ->
                     VerticalMovieCard(
                         movieResult = movieResult,
-                        onCardClick = onCardClick
+                        onCardClick = onCardClick,
+                        onButtonEnabled = onButtonEnabled,
+                        onChangeButtonEnable = onChangeButtonEnable,
                     )
                 }
             }
@@ -68,6 +72,8 @@ fun MovieCard(
 @Composable
 fun VerticalMovieCard(
     movieResult: MovieResult,
+    onButtonEnabled: Boolean,
+    onChangeButtonEnable: (Boolean) -> Unit,
     onCardClick: (Int) -> Unit
 ) {
 
@@ -78,8 +84,12 @@ fun VerticalMovieCard(
     Column(
         modifier = Modifier.clickable(
             interactionSource = MutableInteractionSource(),
-            indication = null
-        ) { onCardClick(movieResult.id) },
+            indication = null,
+            enabled = onButtonEnabled
+        ) {
+            onCardClick(movieResult.id)
+            onChangeButtonEnable(false)
+        },
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.extraSmall)
     ) {
 

@@ -39,7 +39,9 @@ import com.example.movieapp.ui.theme.dimens
 fun TrendingMovieCard(
     pagerState: PagerState,
     trendingMovies: LazyPagingItems<MovieResult>,
-    onCardClick: (Int) -> Unit
+    onCardClick: (Int) -> Unit,
+    onButtonEnabled: Boolean,
+    onChangeButtonEnable: (Boolean) -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small2)
@@ -56,7 +58,9 @@ fun TrendingMovieCard(
         AnimateTrendingMovieCard(
             state = pagerState,
             trendingMovies = trendingMovies,
-            onCardClick = onCardClick
+            onCardClick = onCardClick,
+            onButtonEnabled = onButtonEnabled,
+            onChangeButtonEnable = onChangeButtonEnable
         )
     }
 }
@@ -66,9 +70,10 @@ fun TrendingMovieCard(
 fun AnimateTrendingMovieCard(
     state: PagerState,
     trendingMovies: LazyPagingItems<MovieResult>,
+    onButtonEnabled: Boolean,
+    onChangeButtonEnable: (Boolean) -> Unit,
     onCardClick: (Int) -> Unit
 ) {
-
     HorizontalPager(
         state = state,
         contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.medium3),
@@ -88,9 +93,11 @@ fun AnimateTrendingMovieCard(
                 }
                 .clickable(
                     interactionSource = MutableInteractionSource(),
-                    indication = null
+                    indication = null,
+                    enabled = onButtonEnabled
                 ) {
                     trendingMovies[index]?.let { movieResult ->
+                        onChangeButtonEnable(false)
                         onCardClick(movieResult.id)
                     }
                 },
